@@ -1,8 +1,8 @@
 Metadata-Version: 2.4
 Name: ATmulti_file_handler
-Version: 1.0.1
+Version: 1.0.2
 Summary: A flexible file handler supporting text, JSON, YAML, CSV, XML, dill, and binary formats.
-Home-page: https://github.com/yourusername/ATmulti_file_handler
+Home-page: https://github.com/avitwil/ATmulti_file_handler
 Author: Avi Twil
 Author-email: avitwil@gmail.com
 Classifier: Programming Language :: Python :: 3
@@ -45,6 +45,7 @@ It supports text, JSON, YAML, CSV, XML, pickle-like (Dill), and raw binary files
   - Raw binary (`.bin`, `.dat`, etc.)
 - Easy extension for other formats
 - Append support where applicable
+- open_file function to auto create appropriate file Class
 
 ---
 

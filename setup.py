@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name="ATmulti_file_handler",
-    version="1.0.1",
+    version="1.0.2",
     author="Avi Twil",
     author_email="avitwil@gmail.com",
     description="A flexible file handler supporting text, JSON, YAML, CSV, XML, dill, and binary formats.",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/ATmulti_file_handler",  # תעדכן
+    url="https://github.com/avitwil/ATmulti_file_handler",  # תעדכן
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

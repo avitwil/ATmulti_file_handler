@@ -21,6 +21,7 @@ It supports text, JSON, YAML, CSV, XML, pickle-like (Dill), and raw binary files
   - Raw binary (`.bin`, `.dat`, etc.)
 - Easy extension for other formats
 - Append support where applicable
+- open_file function to auto create appropriate file Class
 
 ---
 
