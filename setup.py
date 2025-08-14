@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ATmulti_file_handler",
-    version="1.0.3",
+    version="1.0.4",
     author="Avi Twil",
     author_email="avitwil@gmail.com",
     description="A flexible file handler supporting text, JSON, YAML, CSV, XML, dill, and binary formats.",
@@ -21,3 +21,4 @@ setup(
         "avi_tools>=1.0.9"
     ]
 )
+globals()

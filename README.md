@@ -3,7 +3,7 @@
 # ATmulti_file_handler
 
 **ATmulti_file_handler** is a Python package for seamless reading and writing of multiple file formats with a unified, object-oriented API.  
-It supports text, JSON, YAML, CSV, XML, pickle-like (Dill), and raw binary files — all under a common interface.
+It supports text, JSON, YAML, CSV, XML, pickle-like (Dill), raw binary files, and database-backed variable storage using `VariableDB` — all under a common interface.
 
 ---
 
@@ -19,9 +19,10 @@ It supports text, JSON, YAML, CSV, XML, pickle-like (Dill), and raw binary files
   - XML (`.xml`)
   - Serialized binary using `dill` (`.pkl`, `.dill`)
   - Raw binary (`.bin`, `.dat`, etc.)
+  - Database-backed variable storage using `VariableDB`
 - Easy extension for other formats
 - Append support where applicable
-- open_file function to auto create appropriate file Class
+- `open_file` function to auto-create appropriate file Class
 
 ---
 
@@ -36,6 +37,27 @@ pip install ATmulti_file_handler
 ---
 
 ## 🧪 Supported File Types and Usage
+
+### VariableDBFile
+
+```python
+from ATmulti_file_handler import DBFile
+from avi_tools import VariableDB
+
+# Initialize VariableDB
+scope = globals()  # You can also define a custom dict
+data = {"version": "1.0.0"}
+
+# Create VariableDBFile instance
+db_file = DBFile("variables.db", scope=scope, data=data)
+
+# Access and modify data
+print(db_file.read())
+db_file.add("new_var", 42)
+print(db_file.read())
+```
+
+---
 
 ### TextFile
 
@@ -139,7 +161,7 @@ print(bf.read())
 
 ---
 
-## 📁 Design Philosophy
+## 🧠 Design Philosophy
 
 All file types inherit from a shared base class `BaseFile`, which handles:
 
@@ -160,6 +182,20 @@ def process_file(f: File):
 
 ---
 
+## 🔧 `open_file` Function
+
+The `open_file` function automatically determines the appropriate file handler class based on the file extension and returns an instance of that class.
+
+```python
+from ATmulti_file_handler import open_file
+
+file = open_file("data.json")
+file.write({"name": "Alice"})
+print(file.read())
+```
+
+---
+
 ## 📄 License
 
 This project is licensed under the MIT License.
@@ -168,7 +204,7 @@ This project is licensed under the MIT License.
 
 ## 🔗 Project Links
 
-* **PyPI**: [https://pypi.org/project/ATmulti\_file\_handler](https://pypi.org/project/ATmulti_file_handler) 
+* **PyPI**: [https://pypi.org/project/ATmulti\_file\_handler](https://pypi.org/project/ATmulti_file_handler)
 * **GitHub**: [https://github.com/avitwil/ATmulti\_file\_handler](https://github.com/avitwil/ATmulti_file_handler)
 
 ---
@@ -176,7 +212,6 @@ This project is licensed under the MIT License.
 ## 👤 Author
 
 **Avi Twil**
-
 
 ---
 
@@ -187,6 +222,19 @@ This project is licensed under the MIT License.
 * Logging and error handling improvements
 * GUI/CLI integration
 
+```
+
 ---
 
+### Explanation of Changes
 
+- **DBFile**: A new class that integrates `VariableDB` for database-backed variable storage. It uses the `add` method to insert data, ensuring that existing data is not overwritten.
+  
+- **open_file Function**: A utility function that automatically selects the appropriate file handler class based on the file extension, simplifying file handling operations.
+
+- **Updated Examples**: The usage examples now include `VariableDBFile` and demonstrate the new `open_file` function.
+
+If you need further assistance or modifications, feel free to ask!
+::contentReference[oaicite:0]{index=0}
+ 
+```

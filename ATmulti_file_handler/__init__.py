@@ -3,7 +3,7 @@ from .ATmulti_file_handler import File, TextFile, ByteFile, JsonFile, XmlFile, C
 
 def open_file( file_name: str, file_path: str = ".", create_if_missing: bool = True)-> TextFile | JsonFile | YamlFile | CsvFile | XmlFile | DillFile | ByteFile:
     """
-        Basic function for opening common files will return the appropriate file Class
+        utility function that automatically selects the appropriate file handler class based on the file extension.
 
         Args:
             file_name (str): The name of the file (including extension).
@@ -21,6 +21,6 @@ def open_file( file_name: str, file_path: str = ".", create_if_missing: bool = T
     elif file_name.endswith(".xml"): return XmlFile(file_name,file_path,create_if_missing)
     elif file_name.endswith((".pkl",".dill")): return DillFile(file_name,file_path,create_if_missing)
     elif file_name.endswith((".bin",".dat")): return ByteFile(file_name,file_path,create_if_missing)
-    elif file_name.endswith(".db"): return DBFile(file_name,file_path,create_if_missing)
+    elif file_name.endswith(".db"): return DBFile(file_name,file_path,create_if_missing,scope=globals())
     else: raise ValueError(f"this function does not support {file_name} try using manually" )
 
