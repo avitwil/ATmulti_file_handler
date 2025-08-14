@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ATmulti_file_handler
-Version: 1.0.2
+Version: 1.0.3
 Summary: A flexible file handler supporting text, JSON, YAML, CSV, XML, dill, and binary formats.
 Home-page: https://github.com/avitwil/ATmulti_file_handler
 Author: Avi Twil
@@ -12,6 +12,7 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: pyyaml>=6.0
 Requires-Dist: dill>=0.3.7
+Requires-Dist: avi_tools>=1.0.9
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier

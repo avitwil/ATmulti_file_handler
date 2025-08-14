@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ATmulti_file_handler",
-    version="1.0.2",
+    version="1.0.3",
     author="Avi Twil",
     author_email="avitwil@gmail.com",
     description="A flexible file handler supporting text, JSON, YAML, CSV, XML, dill, and binary formats.",
@@ -17,6 +17,7 @@ setup(
     ],
     install_requires=[
         "pyyaml>=6.0",
-        "dill>=0.3.7"
+        "dill>=0.3.7",
+        "avi_tools>=1.0.9"
     ]
 )

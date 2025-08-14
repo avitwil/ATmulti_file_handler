@@ -1,4 +1,4 @@
-from .ATmulti_file_handler import File,TextFile,ByteFile,JsonFile,XmlFile,CsvFile,DillFile, YamlFile
+from .ATmulti_file_handler import File, TextFile, ByteFile, JsonFile, XmlFile, CsvFile, DillFile, YamlFile, DBFile
 
 
 def open_file( file_name: str, file_path: str = ".", create_if_missing: bool = True)-> TextFile | JsonFile | YamlFile | CsvFile | XmlFile | DillFile | ByteFile:
@@ -21,5 +21,6 @@ def open_file( file_name: str, file_path: str = ".", create_if_missing: bool = T
     elif file_name.endswith(".xml"): return XmlFile(file_name,file_path,create_if_missing)
     elif file_name.endswith((".pkl",".dill")): return DillFile(file_name,file_path,create_if_missing)
     elif file_name.endswith((".bin",".dat")): return ByteFile(file_name,file_path,create_if_missing)
+    elif file_name.endswith(".db"): return DBFile(file_name,file_path,create_if_missing)
     else: raise ValueError(f"this function does not support {file_name} try using manually" )
 

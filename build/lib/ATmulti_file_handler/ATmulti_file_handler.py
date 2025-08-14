@@ -1,12 +1,12 @@
 from __future__ import annotations
-from typing import Protocol, Any, runtime_checkable
+from typing import Protocol, Any, runtime_checkable, Optional, Dict
 from pathlib import Path
 import json
 import dill
 import csv
 import yaml
 import xml.etree.ElementTree as ET
-
+from avi_tools import VariableDB
 
 @runtime_checkable
 class File(Protocol):
@@ -339,6 +339,60 @@ class XmlFile(BaseFile):
         root.append(element)
         self.write(root)
 
+class DBFile(BaseFile):
+    """
+    DB file handler using avi_tools.VariableDB.
+    Supports read, write, and append operations for key-value storage.
+
+    Args:
+        file_name (str): The name of the DB file.
+        file_path (str, optional): The directory path. Defaults to current directory.
+        scope (dict, optional): Scope dictionary for the VariableDB. Defaults to empty dict.
+        data (dict, optional): Initial data for the VariableDB.
+        create_if_missing (bool, optional): Whether to create the DB if it does not exist. Defaults to True.
+    """
+
+    def __init__(
+        self,
+        file_name: str,
+        file_path: str = ".",
+        scope: Optional[Dict[str, Any]] = None,
+        data: Optional[Dict[str, Any]] = None,
+        create_if_missing: bool = True
+    ) -> None:
+        super().__init__(file_name, file_path, create_if_missing)
+        self.scope = scope or {}
+        self.data = data
+        self.db = VariableDB(str(self._full_path), scope=self.scope, data=self.data)
+        if create_if_missing and not self._full_path.exists():
+            self.db.save()
+
+    def read(self) -> Dict[str, Any]:
+        """
+        Reads all key-value pairs from the DB.
+        """
+        self._check_exists()
+        self.db.load()
+        return self.db.data
+
+    def write(self, data: Dict[str, Any]) -> None:
+        """
+        Overwrites the DB with the given dictionary.
+        """
+        if not isinstance(data, dict):
+            raise ValueError("DBFile.write() expects a dictionary.")
+        self.db.data = data
+        self.db.save()
+
+    def append(self, *args, **kwargs) -> None:
+        """
+        Adds variables to the DB using VariableDB.add().
+        Accepts the same arguments as VariableDB.add().
+        """
+        self._check_exists()
+        self.db.load()
+        self.db.add(*args, **kwargs)
+        self.db.save()
 
 # Example usage
 if __name__ == "__main__":
@@ -376,3 +430,9 @@ if __name__ == "__main__":
     new_person = ET.Element("person")
     new_person.set("name", "Bob")
     xml_file.append(new_person)
+
+    db = DBFile("users.db", scope={})
+    db.append("username", "avi")
+    db.append("email", "avi@example.com")
+
+    print(db.read())
