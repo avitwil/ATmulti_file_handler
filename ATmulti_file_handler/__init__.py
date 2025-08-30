@@ -1,26 +1,58 @@
-from .ATmulti_file_handler import File, TextFile, ByteFile, JsonFile, XmlFile, CsvFile, DillFile, YamlFile, DBFile
+"""
+File Handling Abstraction Package
+=================================
 
+This package provides a unified abstraction layer for working with multiple
+file formats. It exposes the main File classes and a factory function
+for easy instantiation.
 
-def open_file( file_name: str, file_path: str = ".", create_if_missing: bool = True)-> TextFile | JsonFile | YamlFile | CsvFile | XmlFile | DillFile | ByteFile:
-    """
-        utility function that automatically selects the appropriate file handler class based on the file extension.
+Available Classes
+-----------------
+- File
+- TxtFile
+- JsonFile
+- CsvFile
+- DillFile
+- XmlFile
+- YamlFile
+- ByteFile
+- VarDBFile
 
-        Args:
-            file_name (str): The name of the file (including extension).
-            file_path (str, optional): Directory path to store the file. Defaults to the current directory.
-            create_if_missing (bool, optional): Whether to create the file if it does not exist. Defaults to True.
+Factory Function
+----------------
+- file(name, path=None, *, scope=None, data=None)
 
-        Attributes:
-            file_name (str): File name.
-            file_path (str): File path.
-        """
-    if file_name.endswith(".txt"): return TextFile(file_name,file_path,create_if_missing)
-    elif file_name.endswith(".json"): return JsonFile(file_name,file_path,create_if_missing)
-    elif file_name.endswith((".yml",".yaml")): return YamlFile(file_name,file_path,create_if_missing)
-    elif file_name.endswith(".csv"): return CsvFile(file_name,file_path,create_if_missing)
-    elif file_name.endswith(".xml"): return XmlFile(file_name,file_path,create_if_missing)
-    elif file_name.endswith((".pkl",".dill")): return DillFile(file_name,file_path,create_if_missing)
-    elif file_name.endswith((".bin",".dat")): return ByteFile(file_name,file_path,create_if_missing)
-    elif file_name.endswith(".db"): return DBFile(file_name,file_path,create_if_missing,scope=globals())
-    else: raise ValueError(f"this function does not support {file_name} try using manually" )
+Example Usage
+-------------
+from file_module import file, TxtFile, JsonFile
 
+f = file("example.txt")
+f.write("Hello World")
+print(f.read())
+"""
+
+from .core import (
+    File,
+    TxtFile,
+    JsonFile,
+    CsvFile,
+    DillFile,
+    XmlFile,
+    YamlFile,
+    ByteFile,
+    VarDBFile,
+    file
+)
+
+__all__ = [
+    "File",
+    "TxtFile",
+    "JsonFile",
+    "CsvFile",
+    "DillFile",
+    "XmlFile",
+    "YamlFile",
+    "ByteFile",
+    "VarDBFile",
+    "file"
+]

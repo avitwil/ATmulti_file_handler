@@ -1,265 +1,186 @@
 Metadata-Version: 2.4
 Name: ATmulti_file_handler
-Version: 1.0.4
-Summary: A flexible file handler supporting text, JSON, YAML, CSV, XML, dill, and binary formats.
-Home-page: https://github.com/avitwil/ATmulti_file_handler
-Author: Avi Twil
-Author-email: avitwil@gmail.com
+Version: 2.0.0
+Summary: A unified file handling abstraction layer for multiple file formats.
+Author-email: Avi Twil <avitwil@gmail.com>
+License: MIT
+Project-URL: Homepage, https://github.com/avitwil/ATmulti_file_handler
+Project-URL: Source, https://github.com/avitwil/ATmulti_file_handler
+Project-URL: Bug Tracker, https://github.com/avitwil/ATmulti_file_handler/issues
+Keywords: file,txt,json,csv,yaml,xml,dill,binary,database,VarDB
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: Programming Language :: Python :: 3
-Classifier: Operating System :: OS Independent
 Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Utilities
+Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: pyyaml>=6.0
-Requires-Dist: dill>=0.3.7
-Requires-Dist: avi_tools>=1.0.9
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
+Requires-Dist: dill>=0.3.6
+Requires-Dist: PyYAML>=6.0
+Requires-Dist: avi_tools>=1.0.0
 Dynamic: license-file
-Dynamic: requires-dist
-Dynamic: summary
 
 
-````markdown
 # ATmulti_file_handler
 
-**ATmulti_file_handler** is a Python package for seamless reading and writing of multiple file formats with a unified, object-oriented API.  
-It supports text, JSON, YAML, CSV, XML, pickle-like (Dill), raw binary files, and database-backed variable storage using `VariableDB` — all under a common interface.
+A unified **file handling abstraction layer** for multiple file formats. This Python package provides a consistent interface to work with various file types including text, JSON, CSV, YAML, XML, Dill, binary files, and a custom VariableDB database.  
+
+## Features
+
+- Unified `File` base class with consistent interface.
+- Format-specific subclasses:
+  - `TxtFile`   → `.txt`
+  - `JsonFile`  → `.json`
+  - `CsvFile`   → `.csv`
+  - `DillFile`  → `.dill`
+  - `XmlFile`   → `.xml`
+  - `YamlFile`  → `.yml` / `.yaml`
+  - `ByteFile`  → `.bin` / `.exe` / `.img` / `.jpg`
+  - `VarDBFile` → `.db` (requires `avi_tools` package)
+- Common operations: `read`, `write`, `append`, `exist`, `copy`, `move`, `delete`.
+- Automatic directory and file creation if missing.
+- Factory function `file()` to automatically choose the right subclass based on extension.
 
 ---
 
-## ✅ Features
+## Installation
 
-- Unified interface using a `File` protocol
-- Automatic file creation (optional)
-- Built-in support for:
-  - Plain text (`.txt`)
-  - JSON (`.json`)
-  - YAML (`.yaml`, `.yml`)
-  - CSV (`.csv`)
-  - XML (`.xml`)
-  - Serialized binary using `dill` (`.pkl`, `.dill`)
-  - Raw binary (`.bin`, `.dat`, etc.)
-  - Database-backed variable storage using `VariableDB`
-- Easy extension for other formats
-- Append support where applicable
-- `open_file` function to auto-create appropriate file Class
-
----
-
-## 📦 Installation
-
-Install via pip:
+You can install the package directly from **PyPI**:
 
 ```bash
 pip install ATmulti_file_handler
 ````
 
+This will also install all required dependencies:
+`dill`, `PyYAML`, `avi_tools`.
+
 ---
 
-## 🧪 Supported File Types and Usage
+## Usage
 
-### VariableDBFile
+### Import the package
 
 ```python
-from ATmulti_file_handler import DBFile
-from avi_tools import VariableDB
-
-# Initialize VariableDB
-scope = globals()  # You can also define a custom dict
-data = {"version": "1.0.0"}
-
-# Create VariableDBFile instance
-db_file = DBFile("variables.db", scope=scope, data=data)
-
-# Access and modify data
-print(db_file.read())
-db_file.add("new_var", 42)
-print(db_file.read())
+from ATmulti_file_handler import file
 ```
 
 ---
 
-### TextFile
+### Working with Text Files
 
 ```python
-from ATmulti_file_handler import TextFile
-
-txt = TextFile("example.txt")
-txt.write("Hello world")
-print(txt.read())
-txt.append("\nThis is appended.")
+f = file("notes.txt")
+f.write("Hello World")
+print(f.read())   # -> "Hello World"
+f.append("\nAppended text")
 ```
 
 ---
 
-### JsonFile
+### Working with JSON
 
 ```python
-from ATmulti_file_handler import JsonFile
-
-js = JsonFile("data.json")
-js.write({"name": "Alice"})
-print(js.read())
-js.append(("age", 30))  # appends key-value
+f = file("data.json")
+f.write({"a": 1})
+print(f.read())   # -> {"a": 1}
+f.append({"b": 2})
+print(f.read())   # -> {"a": 1, "b": 2}
 ```
 
 ---
 
-### YamlFile
+### Working with CSV
 
 ```python
-from ATmulti_file_handler import YamlFile
-
-yml = YamlFile("config.yaml")
-yml.write({"env": "dev"})
-print(yml.read())
-yml.append({"version": "1.0.0"})
+f = file("table.csv")
+f.write([["Name","Age"],["Alice","30"]])
+f.append(["Bob","25"])
+print(f.read())   # -> [["Name","Age"],["Alice","30"],["Bob","25"]]
 ```
 
 ---
 
-### CsvFile
+### Working with Dill (Python objects)
 
 ```python
-from ATmulti_file_handler import CsvFile
-
-csvf = CsvFile("people.csv")
-csvf.write([
-    {"name": "Alice", "age": 30},
-    {"name": "Bob", "age": 25}
-])
-print(csvf.read())
-csvf.append({"name": "Charlie", "age": 22})
+f = file("data.dill")
+f.write([1,2,3])
+f.append(4)
+print(f.read())   # -> [1,2,3,4]
 ```
 
 ---
 
-### XmlFile
+### Working with YAML
 
 ```python
-from ATmulti_file_handler import XmlFile
+f = file("config.yaml")
+f.write({"setting": True})
+f.append({"debug": False})
+print(f.read())   # -> {"setting": True, "debug": False}
+```
+
+---
+
+### Working with XML
+
+```python
 import xml.etree.ElementTree as ET
 
-xmlf = XmlFile("data.xml")
-root = ET.Element("people")
-person = ET.Element("person")
-person.set("name", "Alice")
-root.append(person)
-xmlf.write(root)
-
-# Append new element
-new_person = ET.Element("person")
-new_person.set("name", "Bob")
-xmlf.append(new_person)
-
-print(ET.tostring(xmlf.read()))
+f = file("data.xml")
+root = ET.Element("root")
+f.write(root)
+child = ET.Element("child")
+root.append(child)
+f.append(ET.Element("another_child"))
 ```
 
 ---
 
-### DillFile
+### Working with Binary Files
 
 ```python
-from ATmulti_file_handler import DillFile
-
-dillf = DillFile("model.dill")
-dillf.write({"model": [1, 2, 3]})
-print(dillf.read())
+f = file("data.bin")
+f.write(b"Hello")
+f.append(b" World")
+print(f.read())  # -> b"Hello World"
 ```
 
 ---
 
-### ByteFile
+### Working with VariableDB Files
 
 ```python
-from ATmulti_file_handler import ByteFile
-
-bf = ByteFile("raw.bin")
-bf.write(b'\x00\x01\x02')
-print(bf.read())
+b = 20
+f = file("config.db", scope=globals(), data={"a": 10})
+f.append(b)
+print(f.read())   # -> {"a": 10, "b": 20}
 ```
 
 ---
 
-## 🧠 Design Philosophy
-
-All file types inherit from a shared base class `BaseFile`, which handles:
-
-* Path creation and validation
-* Auto-creation of empty files
-* Unified error handling
-* Standard interface: `read()` and `write()`
-  Some classes also provide `append()` methods.
-
-You can work with any file using the shared `File` protocol:
+### Common Operations
 
 ```python
-from ATmulti_file_handler import File
-
-def process_file(f: File):
-    print("File contents:", f.read())
+f = file("notes.txt")
+print(f.exist())           # True/False
+f.copy("/tmp")             # Copies file to /tmp
+f.move("/tmp")             # Moves file to /tmp
+f.delete()                 # Deletes the file
 ```
 
 ---
 
-## 🔧 `open_file` Function
-
-The `open_file` function automatically determines the appropriate file handler class based on the file extension and returns an instance of that class.
-
-```python
-from ATmulti_file_handler import open_file
-
-file = open_file("data.json")
-file.write({"name": "Alice"})
-print(file.read())
-```
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-## 🔗 Project Links
-
-* **PyPI**: [https://pypi.org/project/ATmulti\_file\_handler](https://pypi.org/project/ATmulti_file_handler)
-* **GitHub**: [https://github.com/avitwil/ATmulti\_file\_handler](https://github.com/avitwil/ATmulti_file_handler)
-
----
-
-## 👤 Author
+## Author
 
 **Avi Twil**
 
----
-
-## 🧩 Future Features (Ideas)
-
-* Support for Excel (.xlsx) via `openpyxl`
-* Automatic schema inference for CSV
-* Logging and error handling improvements
-* GUI/CLI integration
-
-```
+GitHub: [https://github.com/avitwil/ATmulti\_file\_handler](https://github.com/avitwil/ATmulti_file_handler)
 
 ---
 
-### Explanation of Changes
+## License
 
-- **DBFile**: A new class that integrates `VariableDB` for database-backed variable storage. It uses the `add` method to insert data, ensuring that existing data is not overwritten.
-  
-- **open_file Function**: A utility function that automatically selects the appropriate file handler class based on the file extension, simplifying file handling operations.
+MIT License
 
-- **Updated Examples**: The usage examples now include `VariableDBFile` and demonstrate the new `open_file` function.
-
-If you need further assistance or modifications, feel free to ask!
-::contentReference[oaicite:0]{index=0}
- 
-```
